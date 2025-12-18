@@ -170,19 +170,14 @@ void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 		}
 
 		//if (MatchType == FString("FreeForAll"))
-		if(false)
+		if(SessionName == FString(TEXT("DedicatedServer Session 2")))
 		{
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Joining Match Type : %s"), *MatchType));
-			}
-
 			OnlineSessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate);
 
 			const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 			if (IsValid(LocalPlayer))
 			{
-				OnlineSessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), NAME_GameSession, Result);
+				OnlineSessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), FName(*SessionName), Result);
 			}
 		}
 	}
@@ -191,14 +186,16 @@ void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 void ATOTitlePlayerController::OnJoinSessionComplate(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
 	if (!OnlineSessionInterface.IsValid())
+	{
 		return;
+	}
 
 	FString Address;
-	if (OnlineSessionInterface->GetResolvedConnectString(NAME_GameSession, Address))
+	if (OnlineSessionInterface->GetResolvedConnectString(SessionName, Address))
 	{
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString::Printf(TEXT("Connect String : %s"), *Address));
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Yellow, FString::Printf(TEXT("Joined Session Name : %s(%s)"),*SessionName.ToString(),  *Address));
 		}
 
 		APlayerController* PlayerController = GetGameInstance()->GetFirstLocalPlayerController();
