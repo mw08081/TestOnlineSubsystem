@@ -55,7 +55,7 @@ void UTOGameInstance::CreateGameSession()
 	OnlineSessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnCreateSessionComplete);
 
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
-	SessionSettings->bIsLANMatch = false;
+	SessionSettings->bIsLANMatch = true;
 	SessionSettings->NumPublicConnections = 4;
 	SessionSettings->bAllowJoinInProgress = true;
 	SessionSettings->bAllowJoinViaPresence = true;
