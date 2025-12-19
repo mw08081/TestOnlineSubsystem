@@ -55,7 +55,7 @@ void UTOGameInstance::CreateGameSession()
 	OnlineSessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnCreateSessionComplete);
 
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
-	SessionSettings->bIsLANMatch = true;
+	SessionSettings->bIsLANMatch = false;
 	SessionSettings->NumPublicConnections = 4;
 	SessionSettings->bAllowJoinInProgress = true;
 	SessionSettings->bAllowJoinViaPresence = true;
@@ -65,11 +65,11 @@ void UTOGameInstance::CreateGameSession()
 	SessionSettings->bIsDedicated = true;
 	
 	// 개별 값 추가
-	SessionSettings->Set(FName(TEXT("SessionName")), FString(TEXT("DedicatedServer Session 1")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	SessionSettings->Set(FName(TEXT("SessionName")), FString(TEXT("DedicatedServer Session")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	SessionSettings->Set(FName(TEXT("MatchType")),FString(TEXT("Deathmatch")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	SessionSettings->Set(FName(TEXT("SessionStart")), false, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	
-	OnlineSessionInterface->CreateSession(0, FName(TEXT("DedicatedServer Session 1")), *SessionSettings);
+	OnlineSessionInterface->CreateSession(0, FName(TEXT("DedicatedServer Session")), *SessionSettings);
 }
 
 void UTOGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
