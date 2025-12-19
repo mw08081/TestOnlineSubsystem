@@ -144,6 +144,11 @@ void ATOTitlePlayerController::ReadyToFindSession()
 
 
 	UE_LOG(LogTemp, Error, TEXT("Find Sessions..."));
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Find Sessions...")));
+	}
+
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	OnlineSessionInterface->FindSessions(*LocalPlayer->GetPreferredUniqueNetId(), SessionSearch.ToSharedRef());
 }
@@ -176,7 +181,7 @@ void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Session: %s(%s) / Owner : %s / %d"), *SessionName, *Id, *User, bSessionStart));
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Session: %s(%s)- %s"), *SessionName, *Id, (bSessionStart ? TEXT("Started") : TEXT("Watting"))));
 		}
 
 		//if (MatchType == FString("FreeForAll"))
@@ -189,6 +194,7 @@ void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 			if (IsValid(LocalPlayer))
 			{
 				OnlineSessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), FName(*SessionName), Result);
+				return;
 			}
 		}
 	}
