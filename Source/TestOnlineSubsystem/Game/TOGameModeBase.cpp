@@ -3,23 +3,33 @@
 
 #include "TOGameModeBase.h"
 
+#include "Player/Controller/TOTitlePlayerController.h"
+#include "Game/TOGameInstance.h"
 
 void ATOGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetOnlineSubsystem();
 }
 
-void ATOGameModeBase::GetOnlineSubsystem()
+void ATOGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
-	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+	Super::PostLogin(NewPlayer);
 
-	if (OnlineSubsystem)
+	ATOTitlePlayerController* NewPlayerController = Cast<ATOTitlePlayerController>(NewPlayer);
+	if (NewPlayerController != nullptr)
 	{
-		SessionInterface = OnlineSubsystem->GetSessionInterface();
+		AlivePlayerControllers.Add(NewPlayerController);
 
-		if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Purple, FString::Printf(TEXT("Subsystem Name : % s"), *OnlineSubsystem->GetSubsystemName().ToString()));
+		if (AlivePlayerControllers.Num() >= 2) {
+			UE_LOG(LogTemp, Error, TEXT("Player is full. This Session will be closed..."));
+
+			UTOGameInstance* GI = GetWorld()->GetGameInstance<UTOGameInstance>();
+			if (GI)
+			{
+				GI->ManageSession(false);
+			}
+		}
 	}
 }
+

@@ -24,10 +24,11 @@ class TESTONLINESUBSYSTEM_API ATOGameModeBase : public AGameModeBase
 public:
 	virtual void BeginPlay() override;
 
-protected:
-	void GetOnlineSubsystem();
 
-	IOnlineSessionPtr SessionInterface;
-	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<TObjectPtr<class ATOTitlePlayerController>> AlivePlayerControllers;
+
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 };

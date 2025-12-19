@@ -151,9 +151,16 @@ void ATOTitlePlayerController::ReadyToFindSession()
 void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 {
 	if (!OnlineSessionInterface.IsValid() || !bWasSuccessful)
+	{
 		return;
+	}
 
 	UE_LOG(LogTemp, Error, TEXT("Found Session Count : %d"), SessionSearch->SearchResults.Num());
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Found Session Count : %d"), SessionSearch->SearchResults.Num()));
+	}
+
 	for (auto Result : SessionSearch->SearchResults)
 	{
 		FString Id = Result.GetSessionIdStr();
@@ -164,13 +171,17 @@ void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 		FString MatchType;
 		Result.Session.SessionSettings.Get(FName("MatchType"), MatchType);
 
+		bool bSessionStart;
+		Result.Session.SessionSettings.Get(FName("SessionStart"), bSessionStart);
+
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Session: %s(%s) / Owner : %s"), *SessionName, *Id, *User));
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Session: %s(%s) / Owner : %s / %d"), *SessionName, *Id, *User, bSessionStart));
 		}
 
 		//if (MatchType == FString("FreeForAll"))
-		if(SessionName == FString(TEXT("DedicatedServer Session 2")))
+		//if(SessionName == FString(TEXT("DedicatedServer Session 2")))
+		if(true && bSessionStart == false)
 		{
 			OnlineSessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate);
 

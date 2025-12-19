@@ -40,5 +40,12 @@ public:
 private:
 	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
 #pragma endregion
+
+# pragma region Open/Cloase Session
+
+public:
+	void ManageSession(bool bShouldOpen);
+
+# pragma endregion
 	
 };

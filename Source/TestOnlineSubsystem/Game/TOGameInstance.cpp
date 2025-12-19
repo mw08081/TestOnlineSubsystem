@@ -67,6 +67,7 @@ void UTOGameInstance::CreateGameSession()
 	// 개별 값 추가
 	SessionSettings->Set(FName(TEXT("SessionName")), FString(TEXT("DedicatedServer Session 1")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	SessionSettings->Set(FName(TEXT("MatchType")),FString(TEXT("Deathmatch")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	SessionSettings->Set(FName(TEXT("SessionStart")), false, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	
 	OnlineSessionInterface->CreateSession(0, FName(TEXT("DedicatedServer Session 1")), *SessionSettings);
 }
@@ -74,4 +75,19 @@ void UTOGameInstance::CreateGameSession()
 void UTOGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Error, TEXT("Complete Create Seesion : % s"), *SessionName.ToString());
+}
+
+void UTOGameInstance::ManageSession(bool bShouldOpen)
+{
+	FNamedOnlineSession* Session = OnlineSessionInterface->GetNamedSession(FName(TEXT("DedicatedServer Session 1")));
+	UE_LOG(LogTemp, Error, TEXT("%s Session is closing..."), *Session->SessionName.ToString());
+
+	if (Session)
+	{
+		FOnlineSessionSettings& Settings = Session->SessionSettings;
+		Settings.bShouldAdvertise = bShouldOpen;
+		Settings.NumPublicConnections = bShouldOpen ? 4 : 0; // 같이 잠그는 걸 추천
+		Settings.Set(FName(TEXT("SessionStart")), true, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+		OnlineSessionInterface->UpdateSession(Session->SessionName, Settings);
+	}
 }
