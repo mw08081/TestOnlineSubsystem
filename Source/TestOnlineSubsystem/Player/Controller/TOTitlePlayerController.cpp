@@ -148,7 +148,7 @@ void ATOTitlePlayerController::ReadyToFindSession()
 
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	SessionSearch->MaxSearchResults = 10000;
-	SessionSearch->bIsLanQuery = true;
+	SessionSearch->bIsLanQuery = false;
 	/*if (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL")
 	{
 		SessionSearch->bIsLanQuery = false;
@@ -203,7 +203,35 @@ void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 
 		//if (MatchType == FString("FreeForAll"))
 		//if(SessionName == FString(TEXT("DedicatedServer Session 2")))
-		if(true && bSessionStart == false)
+		//if(true && bSessionStart == false)
+		//{
+		//	OnlineSessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate);
+
+		//	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
+		//	if (IsValid(LocalPlayer))
+		//	{
+		//		OnlineSessionInterface->JoinSession(*LocalPlayer->GetPreferredUniqueNetId(), FName(*SessionName), Result);
+		//		return;
+		//	}
+		//}
+	}
+
+	for (auto Result : SessionSearch->SearchResults)
+	{
+		FString Id = Result.GetSessionIdStr();
+		FString User = Result.Session.OwningUserName;
+
+		FString SessionName;
+		Result.Session.SessionSettings.Get(FName("SessionName"), SessionName);
+		FString MatchType;
+		Result.Session.SessionSettings.Get(FName("MatchType"), MatchType);
+
+		bool bSessionStart;
+		Result.Session.SessionSettings.Get(FName("SessionStart"), bSessionStart);
+
+		//if (MatchType == FString("FreeForAll"))
+		//if(SessionName == FString(TEXT("DedicatedServer Session 2")))
+		if (true && bSessionStart == false)
 		{
 			OnlineSessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate);
 

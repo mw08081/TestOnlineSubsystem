@@ -55,7 +55,7 @@ void UTOGameInstance::CreateGameSession()
 	OnlineSessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnCreateSessionComplete);
 
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
-	SessionSettings->bIsLANMatch = true;
+	SessionSettings->bIsLANMatch = false;
 	/*if (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL")
 	{
 		SessionSettings->bIsLANMatch = false;
