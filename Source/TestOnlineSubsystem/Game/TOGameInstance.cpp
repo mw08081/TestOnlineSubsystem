@@ -55,7 +55,15 @@ void UTOGameInstance::CreateGameSession()
 	OnlineSessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnCreateSessionComplete);
 
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
-	SessionSettings->bIsLANMatch = false;
+	SessionSettings->bIsLANMatch = true;
+	/*if (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL")
+	{
+		SessionSettings->bIsLANMatch = false;
+	}
+	else
+	{
+		SessionSettings->bIsLANMatch = true;
+	}*/
 	SessionSettings->NumPublicConnections = 4;
 	SessionSettings->bAllowJoinInProgress = true;
 	SessionSettings->bAllowJoinViaPresence = true;
@@ -79,14 +87,14 @@ void UTOGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSucces
 
 void UTOGameInstance::ManageSession(bool bShouldOpen)
 {
-	FNamedOnlineSession* Session = OnlineSessionInterface->GetNamedSession(FName(TEXT("DedicatedServer Session 1")));
+	FNamedOnlineSession* Session = OnlineSessionInterface->GetNamedSession(FName(TEXT("DedicatedServer Session")));
 	UE_LOG(LogTemp, Error, TEXT("%s Session is closing..."), *Session->SessionName.ToString());
 
 	if (Session)
 	{
 		FOnlineSessionSettings& Settings = Session->SessionSettings;
-		Settings.bShouldAdvertise = bShouldOpen;
-		Settings.NumPublicConnections = bShouldOpen ? 4 : 0; // 같이 잠그는 걸 추천
+		
+		
 		Settings.Set(FName(TEXT("SessionStart")), true, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 		OnlineSessionInterface->UpdateSession(Session->SessionName, Settings);
 	}

@@ -88,7 +88,16 @@ void ATOTitlePlayerController::CreateGameSession()
 	OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
 
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
-	SessionSettings->bIsLANMatch = false;
+	SessionSettings->bIsLANMatch = true;
+	/*if (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL")
+	{
+		SessionSettings->bIsLANMatch = false;
+	}
+	else
+	{
+		SessionSettings->bIsLANMatch = true;
+	}*/
+
 	SessionSettings->NumPublicConnections = 4;
 	SessionSettings->bAllowJoinInProgress = true;
 	SessionSettings->bAllowJoinViaPresence = true;
@@ -139,7 +148,15 @@ void ATOTitlePlayerController::ReadyToFindSession()
 
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	SessionSearch->MaxSearchResults = 10000;
-	SessionSearch->bIsLanQuery = false;
+	SessionSearch->bIsLanQuery = true;
+	/*if (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL")
+	{
+		SessionSearch->bIsLanQuery = false;
+	}
+	else
+	{
+		SessionSearch->bIsLanQuery = true;
+	}*/
 	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
 
@@ -181,7 +198,7 @@ void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Session: %s(%s)- %s"), *SessionName, *Id, (bSessionStart ? TEXT("Started") : TEXT("Watting"))));
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Session: %s(%s)- %s"), *SessionName, *Id, (bSessionStart ? TEXT("Started") : TEXT("Waitting"))));
 		}
 
 		//if (MatchType == FString("FreeForAll"))
