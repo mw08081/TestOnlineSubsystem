@@ -157,7 +157,10 @@ void ATOTitlePlayerController::ReadyToFindSession()
 	{
 		SessionSearch->bIsLanQuery = true;
 	}*/
-	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+	//SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+
+	// Presence 검색 제거하고 Dedicated 서버 검색 추가
+	SessionSearch->QuerySettings.Set(SEARCH_DEDICATED_ONLY, true, EOnlineComparisonOp::Equals);
 
 
 	UE_LOG(LogTemp, Error, TEXT("Find Sessions..."));
