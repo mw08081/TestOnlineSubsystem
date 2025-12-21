@@ -55,22 +55,12 @@ void UTOGameInstance::CreateGameSession()
 	OnlineSessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnCreateSessionComplete);
 
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
-	SessionSettings->bIsLANMatch = false;
-	/*if (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL")
-	{
-		SessionSettings->bIsLANMatch = false;
-	}
-	else
-	{
-		SessionSettings->bIsLANMatch = true;
-	}*/
-	SessionSettings->NumPublicConnections = 4;
-	SessionSettings->bAllowJoinInProgress = true;
-	SessionSettings->bAllowJoinViaPresence = true;
-	SessionSettings->bShouldAdvertise = true;
-	SessionSettings->bUsesPresence = true;
-	
-	SessionSettings->bIsDedicated = true;
+	SessionSettings->bUsesPresence = false;           // 필수 수정
+	SessionSettings->bAllowJoinViaPresence = false;   // Presence 비활성화
+	SessionSettings->bShouldAdvertise = true;         // 서버 목록 노출
+	SessionSettings->bIsDedicated = true;             // 유지
+	SessionSettings->bIsLANMatch = false;             // 인터넷 매치
+
 	
 	// 개별 값 추가
 	SessionSettings->Set(FName(TEXT("SessionName")), FString(TEXT("DedicatedServer Session")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
@@ -83,9 +73,15 @@ void UTOGameInstance::CreateGameSession()
 void UTOGameInstance::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
 	UE_LOG(LogTemp, Error, TEXT("Complete Create Seesion : % s"), *SessionName.ToString());
+
+	FNamedOnlineSession* Session = OnlineSessionInterface->GetNamedSession(SessionName);
+	if (Session)
+	{
+
+	}
 }
 
-void UTOGameInstance::ManageSession(bool bShouldOpen)
+void UTOGameInstance::ManageSession(bool bIsSessionStarted)
 {
 	FNamedOnlineSession* Session = OnlineSessionInterface->GetNamedSession(FName(TEXT("DedicatedServer Session")));
 	UE_LOG(LogTemp, Error, TEXT("%s Session is closing..."), *Session->SessionName.ToString());
@@ -95,7 +91,7 @@ void UTOGameInstance::ManageSession(bool bShouldOpen)
 		FOnlineSessionSettings& Settings = Session->SessionSettings;
 		
 		
-		Settings.Set(FName(TEXT("SessionStart")), true, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+		Settings.Set(FName(TEXT("SessionStart")), bIsSessionStarted, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 		OnlineSessionInterface->UpdateSession(Session->SessionName, Settings);
 	}
 }

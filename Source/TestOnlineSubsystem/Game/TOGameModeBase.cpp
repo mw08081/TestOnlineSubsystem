@@ -27,7 +27,7 @@ void ATOGameModeBase::PostLogin(APlayerController* NewPlayer)
 			UTOGameInstance* GI = GetWorld()->GetGameInstance<UTOGameInstance>();
 			if (GI)
 			{
-				GI->ManageSession(false);
+				GI->ManageSession(true);
 			}
 		}
 	}

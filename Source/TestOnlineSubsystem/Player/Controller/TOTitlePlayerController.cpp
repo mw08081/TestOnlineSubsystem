@@ -88,7 +88,7 @@ void ATOTitlePlayerController::CreateGameSession()
 	OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
 
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
-	SessionSettings->bIsLANMatch = true;
+	SessionSettings->bIsLANMatch = false;
 	/*if (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL")
 	{
 		SessionSettings->bIsLANMatch = false;
@@ -198,7 +198,7 @@ void ATOTitlePlayerController::OnFindSessionComplete(bool bWasSuccessful)
 
 		if (GEngine)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Session: %s(%s)- %s"), *SessionName, *Id, (bSessionStart ? TEXT("Started") : TEXT("Waitting"))));
+			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("%s Session: %s(%s)- %s"), *User, *SessionName, *Id, (bSessionStart ? TEXT("Started") : TEXT("Waitting"))));
 		}
 
 		//if (MatchType == FString("FreeForAll"))

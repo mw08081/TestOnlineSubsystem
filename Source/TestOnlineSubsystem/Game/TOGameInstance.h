@@ -44,7 +44,7 @@ private:
 # pragma region Open/Cloase Session
 
 public:
-	void ManageSession(bool bShouldOpen);
+	void ManageSession(bool bIsSessionStarted);
 
 # pragma endregion
 	
