@@ -55,14 +55,12 @@ void UTOGameInstance::CreateGameSession()
 	OnlineSessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &ThisClass::OnCreateSessionComplete);
 
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
-	SessionSettings->bUsesPresence = false;           // 필수 수정
-	SessionSettings->bAllowJoinViaPresence = false;   // Presence 비활성화
-	SessionSettings->bShouldAdvertise = true;         // 서버 목록 노출
-	SessionSettings->bIsDedicated = true;             // 유지
-	SessionSettings->bIsLANMatch = false;             // 인터넷 매치
-
+	SessionSettings->bUsesPresence = false;          
+	SessionSettings->bAllowJoinViaPresence = false;  
+	SessionSettings->bShouldAdvertise = true;        
+	SessionSettings->bIsDedicated = true;             
+	SessionSettings->bIsLANMatch = false;           
 	
-	// 개별 값 추가
 	SessionSettings->Set(FName(TEXT("SessionName")), FString(TEXT("DedicatedServer Session")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	SessionSettings->Set(FName(TEXT("MatchType")),FString(TEXT("Deathmatch")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	SessionSettings->Set(FName(TEXT("SessionStart")), false, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);

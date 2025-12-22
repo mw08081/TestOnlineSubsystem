@@ -104,7 +104,7 @@ void ATOTitlePlayerController::CreateGameSession()
 	SessionSettings->bShouldAdvertise = true;
 	SessionSettings->bUsesPresence = true;
 
-	// °³º° °ª Ãß°¡
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß°ï¿½
 	SessionSettings->Set(FName(TEXT("SessionName")), FString(TEXT("ListenServer Session")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	SessionSettings->Set(FName(TEXT("MatchType")), FString(TEXT("Deathmatch")), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
@@ -149,24 +149,15 @@ void ATOTitlePlayerController::ReadyToFindSession()
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	SessionSearch->MaxSearchResults = 10000;
 	SessionSearch->bIsLanQuery = false;
-	/*if (IOnlineSubsystem::Get()->GetSubsystemName() != "NULL")
-	{
-		SessionSearch->bIsLanQuery = false;
-	}
-	else
-	{
-		SessionSearch->bIsLanQuery = true;
-	}*/
-	//SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
-	// Presence °Ë»ö Á¦°ÅÇÏ°í Dedicated ¼­¹ö °Ë»ö Ãß°¡
+	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, false, EOnlineComparisonOp::Equals);  // false!
 	SessionSearch->QuerySettings.Set(SEARCH_DEDICATED_ONLY, true, EOnlineComparisonOp::Equals);
-
 
 	UE_LOG(LogTemp, Error, TEXT("Find Sessions..."));
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Find Sessions...")));
+		IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
+		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("Find Sessions...(%s)"), *OnlineSubsystem->GetSubsystemName().ToString()));
 	}
 
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
@@ -273,11 +264,18 @@ void ATOTitlePlayerController::OnJoinSessionComplate(FName SessionName, EOnJoinS
 
 
 
-void ATOTitlePlayerController::JoinLocalGame()
+FString ATOTitlePlayerController::JoinStaticGame()
 { 
 	APlayerController* PlayerController = GetGameInstance()->GetFirstLocalPlayerController();
 	if (PlayerController)
 	{
-		PlayerController->ClientTravel("127.0.0.1:7777", ETravelType::TRAVEL_Absolute);
+		FString ServerIP = TEXT("221.140.140.49:7777");
+		PlayerController->ClientTravel(ServerIP, ETravelType::TRAVEL_Absolute);
+
+		return ServerIP;
+	}
+	else
+	{
+		return "";
 	}
 }

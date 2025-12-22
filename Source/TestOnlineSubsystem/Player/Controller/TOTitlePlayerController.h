@@ -67,5 +67,5 @@ private:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void JoinLocalGame ();
+	FString JoinStaticGame ();
 };
